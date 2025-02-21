@@ -5,6 +5,7 @@ const TaskModal = ({ task, onClose, onSave }) => {
     title: "",
     description: "",
     category: "To-Do",
+    addedDate: new Date().toISOString().split("T")[0],
   });
 
   useEffect(() => {
