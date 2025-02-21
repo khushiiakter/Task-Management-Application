@@ -7,6 +7,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 const auth = getAuth(app);
@@ -17,11 +18,19 @@ const AuthProvider = ({ children }) => {
 
   const googleProvider = new GoogleAuthProvider();
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     signInWithPopup(auth, googleProvider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
         setUser(user);
+
+        const userData = {
+          email: user.email,
+          name: user.displayName,
+          photo: user.photoURL,
+        };
+        await axios.post("http://localhost:5000/users", userData);
+
         setError("");
         toast.success("Successfully login.");
         navigate("/");
