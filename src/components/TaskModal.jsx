@@ -1,44 +1,76 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const TaskModal = ({ task, onClose, onSave }) => {
-  const [title, setTitle] = useState(task?.title || "");
-  const [description, setDescription] = useState(task?.description || "");
-  const [category, setCategory] = useState(task?.category || "To-Do");
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    category: "To-Do",
+  });
 
-  const handleSave = () => {
-    if (!title.trim()) return alert("Title is required");
-    onSave({ ...task, title, description, category });
-    onClose();
+  useEffect(() => {
+    if (task) {
+      setFormData(task);
+    }
+  }, [task]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSave(formData);
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4">{task ? "Edit Task" : "Add Task"}</h2>
-        <input
-          type="text"
-          placeholder="Title"
-          maxLength="50"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-        />
-        <textarea
-          placeholder="Description (optional)"
-          maxLength="200"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="w-full p-2 mb-2 border rounded"
-        />
-        <select value={category} onChange={(e) => setCategory(e.target.value)} className="w-full p-2 mb-4 border rounded">
-          <option value="To-Do">To-Do</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select>
-        <div className="flex justify-end gap-2">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-400 rounded text-white">Cancel</button>
-          <button onClick={handleSave} className="px-4 py-2 bg-[#5f1a89] hover:bg-[#0F1035] rounded text-white">Save</button>
-        </div>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="w-96 p-6 bg-white rounded-md shadow-lg">
+        <h2 className="text-xl font-bold mb-4">{task ? "Edit Task" : "Add New Task"}</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <input
+              type="text"
+              name="title"
+              placeholder="Task Title"
+              maxLength="50"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <textarea
+              name="description"
+              placeholder="Description (optional)"
+              maxLength="200"
+              value={formData.description}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+            />
+          </div>
+          <div className="mb-4">
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              className="p-2 border rounded w-full"
+            >
+              <option value="To-Do">To-Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
+            </select>
+          </div>
+          <div className="flex gap-4">
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+              {task ? "Update Task" : "Add Task"}
+            </button>
+            <button type="button" onClick={onClose} className="bg-gray-500 text-white p-2 rounded w-full">
+              Cancel
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
