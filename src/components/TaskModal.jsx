@@ -34,10 +34,10 @@ const TaskModal = ({ task, onClose, onSave }) => {
     if (!formData.dueDate) return ""; // If no due date, no color change
     const now = new Date();
     const taskDueDate = new Date(formData.dueDate);
-    
-    // Ensure to reset time part for accurate comparison
-    taskDueDate.setHours(0, 0, 0, 0);
+
+    // Reset time part for accurate comparison
     now.setHours(0, 0, 0, 0);
+    taskDueDate.setHours(0, 0, 0, 0);
 
     // If task due date is before today's date, it's overdue
     if (taskDueDate < now) return "bg-red-500"; // Overdue

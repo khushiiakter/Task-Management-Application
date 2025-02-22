@@ -24,7 +24,10 @@ const TaskBoard = () => {
 
   const addTaskMutation = useMutation({
     mutationFn: async (newTask) =>
-      await axios.post("https://task-management-server-eight-sigma.vercel.app/tasks", newTask),
+      await axios.post(
+        "https://task-management-server-eight-sigma.vercel.app/tasks",
+        newTask
+      ),
     onSuccess: () => {
       refetch();
       Swal.fire("Success!", "Task added successfully.", "success");
@@ -36,7 +39,10 @@ const TaskBoard = () => {
   const updateTaskMutation = useMutation({
     mutationFn: async (updatedTask) => {
       const { _id, ...taskData } = updatedTask;
-      return await axios.put(`https://task-management-server-eight-sigma.vercel.app/tasks/${_id}`, taskData);
+      return await axios.put(
+        `https://task-management-server-eight-sigma.vercel.app/tasks/${_id}`,
+        taskData
+      );
     },
     onSuccess: () => {
       refetch();
@@ -60,7 +66,9 @@ const TaskBoard = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`https://task-management-server-eight-sigma.vercel.app/tasks/${taskId}`);
+        await axios.delete(
+          `https://task-management-server-eight-sigma.vercel.app/tasks/${taskId}`
+        );
         refetch();
         Swal.fire("Deleted!", "Your task has been deleted.", "success");
       }
@@ -115,9 +123,12 @@ const TaskBoard = () => {
       setLocalTasks(newLocalTasks);
 
       try {
-        await axios.put("https://task-management-server-eight-sigma.vercel.app/tasks/reorder", {
-          tasks: categoryTasks,
-        });
+        await axios.put(
+          "https://task-management-server-eight-sigma.vercel.app/tasks/reorder",
+          {
+            tasks: categoryTasks,
+          }
+        );
         console.log("Reorder success!");
       } catch (error) {
         console.error("Failed to reorder tasks:", error);
@@ -137,10 +148,13 @@ const TaskBoard = () => {
       setLocalTasks(movedTasks);
 
       try {
-        await axios.put(`https://task-management-server-eight-sigma.vercel.app/tasks/${taskId}`, {
-          category: destination.droppableId,
-          order: destination.index,
-        });
+        await axios.put(
+          `https://task-management-server-eight-sigma.vercel.app/tasks/${taskId}`,
+          {
+            category: destination.droppableId,
+            order: destination.index,
+          }
+        );
         setActivityLog([
           ...activityLog,
           `Task moved to ${destination.droppableId}`, // Activity log
@@ -154,9 +168,16 @@ const TaskBoard = () => {
 
   // Function to check if the task is overdue and apply color
   const getDueDateColor = (dueDate) => {
-    if (!dueDate) return "";
+    if (!dueDate) return ""; // If no due date, no color change
+
     const now = new Date();
     const taskDueDate = new Date(dueDate);
+
+    // Reset time part for accurate comparison
+    now.setHours(0, 0, 0, 0);
+    taskDueDate.setHours(0, 0, 0, 0);
+
+    // If task due date is before today's date, it's overdue
     if (taskDueDate < now) return "text-red-500"; // Overdue
     return "text-gray-500"; // Default color
   };
@@ -212,13 +233,12 @@ const TaskBoard = () => {
                               </p>
                               {task.dueDate && (
                                 <p
-                                  className={`text-xs ${
-                                    getDueDateColor(task.dueDate)
-                                      ? "text-red-500"
-                                      : "text-gray-500"
-                                  }`}
+                                  className={`text-xs ${getDueDateColor(
+                                    task.dueDate
+                                  )}`}
                                 >
-                                  {getDueDateColor(task.dueDate)
+                                  {getDueDateColor(task.dueDate) ===
+                                  "text-red-500"
                                     ? `Overdue: ${new Date(
                                         task.dueDate
                                       ).toLocaleDateString()}`
