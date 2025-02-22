@@ -9,7 +9,7 @@ const TaskModal = ({ task, onClose, onSave }) => {
     category: "To-Do",
     order: 0,
     timestamp: new Date().toISOString(),
-    dueDate: "", // New field for due date
+    dueDate: "", 
   });
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const TaskModal = ({ task, onClose, onSave }) => {
 
   // Function to check if the task is overdue and apply color
   const getDueDateColor = () => {
-    if (!formData.dueDate) return ""; // If no due date, no color change
+    if (!formData.dueDate) return ""; 
     const now = new Date();
     const taskDueDate = new Date(formData.dueDate);
 
@@ -39,8 +39,8 @@ const TaskModal = ({ task, onClose, onSave }) => {
     now.setHours(0, 0, 0, 0);
     taskDueDate.setHours(0, 0, 0, 0);
 
-    // If task due date is before today's date, it's overdue
-    if (taskDueDate < now) return "bg-red-500"; // Overdue
+    
+    if (taskDueDate < now) return "bg-red-500"; 
     return "";
   };
 

@@ -16,7 +16,7 @@ const TaskBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [localTasks, setLocalTasks] = useState([]);
-  const [activityLog, setActivityLog] = useState([]); // State for activity log
+  const [activityLog, setActivityLog] = useState([]); 
 
   useEffect(() => {
     setLocalTasks(tasks);
@@ -168,17 +168,17 @@ const TaskBoard = () => {
 
   // Function to check if the task is overdue and apply color
   const getDueDateColor = (dueDate) => {
-    if (!dueDate) return ""; // If no due date, no color change
+    if (!dueDate) return ""; 
 
     const now = new Date();
     const taskDueDate = new Date(dueDate);
 
-    // Reset time part for accurate comparison
+    
     now.setHours(0, 0, 0, 0);
     taskDueDate.setHours(0, 0, 0, 0);
 
     // If task due date is before today's date, it's overdue
-    if (taskDueDate < now) return "text-red-500"; // Overdue
+    if (taskDueDate < now) return "text-red-500"; 
     return "text-gray-500"; // Default color
   };
 
