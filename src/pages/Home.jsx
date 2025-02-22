@@ -1,5 +1,5 @@
 
-import { CgProfile } from 'react-icons/cg';
+// import { CgProfile } from 'react-icons/cg';
 import { FaBars, FaHome } from 'react-icons/fa';
 import { Link} from 'react-router-dom';
 import TaskBoard from './TaskBoard';
@@ -47,12 +47,12 @@ const Home = () => {
                   <span className="mx-4 font-medium">Home</span>
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/dashboard/profilePage">
                 <CgProfile />
                   <span className="mx-4 font-medium">Profile</span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

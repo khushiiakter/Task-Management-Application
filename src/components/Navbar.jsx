@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
+import ThemeToggle from "./hooks/ThemeToggle";
 
 
 const Navbar = () => {
@@ -41,7 +42,7 @@ const Navbar = () => {
       </div> */}
       <div className="md:block hidden"></div>
       <div className="navbar-end">
-        
+        <ThemeToggle></ThemeToggle>
         {user ? (
           <>
             <div className="relative group hidden md:block">
@@ -52,7 +53,7 @@ const Navbar = () => {
                     : `${"https://i.ibb.co.com/Rh2DLGL/blank-profile-picture-973460-640.png"}`
                 }
                 // alt="Profile"
-                className="border-2 border-[#e3e5f3d5] w-11 h-11 mr-3 rounded-full object-cover cursor-pointer ml-16"
+                className="border-2 border-[#e3e5f3d5] w-11 h-11 mr-3 rounded-full object-cover cursor-pointer ml-2"
               />
               <div
                 className="absolute -right-4
@@ -63,7 +64,7 @@ const Navbar = () => {
             </div>
             <Link
               onClick={logOut}
-              className="md:py-2 py-2 px-4 mr-2 text-sm md:text-base text-white bg-[#5f1a89] font-semibold hover:bg-[#0F1035] rounded-full md:px-5  hover:border-white "
+              className="md:py-2 py-2 px-4 mr-2 text-sm md:text-base text-white hover:bg-gray-300  font-semibold bg-[#0F1035] hover:text-black rounded-full md:px-5   hover:border-white "
             >
               Log Out
             </Link>
@@ -72,7 +73,7 @@ const Navbar = () => {
           <>
             <Link
             //   to="/auth/login"
-              className="md:py-2 py-2 px-4 mr-2 text-sm md:text-base text-white bg-[#5f1a89] font-semibold hover:bg-[#0F1035] rounded-full md:px-5  hover:border-white "
+              className="md:py-2 py-2 px-4 mr-2 text-sm md:text-base text-white hover:bg-gray-200 font-semibold bg-[#0F1035] rounded-full md:px-5  hover:border-white "
             >
               Login
             </Link>

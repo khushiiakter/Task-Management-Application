@@ -173,7 +173,7 @@ const TaskBoard = () => {
                   {...provided.droppableProps}
                   className="bg-gray-200 p-4 rounded-md shadow-md"
                 >
-                  <h2 className="text-lg font-bold mb-2">{category}</h2>
+                  <h2 className="text-lg font-bold text-black mb-2">{category}</h2>
                   {localTasks
                     .filter((task) => task.category === category)
                     .sort((a, b) => a.order - b.order)
@@ -191,15 +191,15 @@ const TaskBoard = () => {
                             className="py-2 px-3 bg-white rounded-md shadow mb-2 flex justify-between items-center"
                           >
                             <div>
-                              <strong className="block">{task.title}</strong>
-                              <p className="text-sm text-gray-600">
+                              <strong className="block text-black">{task.title}</strong>
+                              <p className="text-sm text-gray-700">
                                 {task.description}
                               </p>
                             </div>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleEditTask(task)}
-                                className="text-xl hover:text-black"
+                                className="text-xl text-gray-600 hover:text-black"
                               >
                                 <TiEdit />
                               </button>
@@ -207,7 +207,7 @@ const TaskBoard = () => {
                                 onClick={() =>
                                   deleteTaskMutation.mutate(task._id)
                                 }
-                                className="text-lg hover:text-red-700"
+                                className="text-lg text-gray-600 hover:text-red-700"
                               >
                                 <BsFillTrash3Fill />
                               </button>

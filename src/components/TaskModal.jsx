@@ -6,7 +6,8 @@ const TaskModal = ({ task, onClose, onSave }) => {
     description: "",
     category: "To-Do",
     order: 0, 
-    addedDate: new Date().toISOString().split("T")[0],
+    // addedDate: new Date().toISOString().split("T")[0],
+    timestamp: new Date().toISOString(),
   });
 
   useEffect(() => {
@@ -27,8 +28,8 @@ const TaskModal = ({ task, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-      <div className="w-96 p-6 bg-white rounded-md shadow-lg">
-        <h2 className="text-xl font-bold mb-4">{task ? "Edit Task" : "Add New Task"}</h2>
+      <div className="w-96 p-6 bg-white  rounded-md shadow-lg">
+        <h2 className="text-xl font-bold text-black mb-4">{task ? "Edit Task" : "Add New Task"}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input
@@ -65,10 +66,10 @@ const TaskModal = ({ task, onClose, onSave }) => {
             </select>
           </div>
           <div className="flex gap-4">
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+            <button type="submit" className="text-white hover:bg-gray-300  font-semibold bg-[#0F1035] hover:text-black p-2 rounded w-full">
               {task ? "Update Task" : "Add Task"}
             </button>
-            <button type="button" onClick={onClose} className="bg-gray-500 text-white p-2 rounded w-full">
+            <button type="button" onClick={onClose} className="bg-gray-400 text-white  font-semibold p-2 rounded w-full">
               Cancel
             </button>
           </div>
