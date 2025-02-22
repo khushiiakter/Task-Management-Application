@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
           name: user.displayName,
           photo: user.photoURL,
         };
-        await axios.post("http://localhost:5000/users", userData);
+        await axios.post("https://task-management-server-eight-sigma.vercel.app/users", userData);
 
         setError("");
         toast.success("Successfully login.");

@@ -24,7 +24,7 @@ const TaskBoard = () => {
 
   const addTaskMutation = useMutation({
     mutationFn: async (newTask) =>
-      await axios.post("http://localhost:5000/tasks", newTask),
+      await axios.post("https://task-management-server-eight-sigma.vercel.app/tasks", newTask),
     onSuccess: () => {
       refetch();
       Swal.fire("Success!", "Task added successfully.", "success");
@@ -36,7 +36,7 @@ const TaskBoard = () => {
   const updateTaskMutation = useMutation({
     mutationFn: async (updatedTask) => {
       const { _id, ...taskData } = updatedTask;
-      return await axios.put(`http://localhost:5000/tasks/${_id}`, taskData);
+      return await axios.put(`https://task-management-server-eight-sigma.vercel.app/tasks/${_id}`, taskData);
     },
     onSuccess: () => {
       refetch();
@@ -60,7 +60,7 @@ const TaskBoard = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:5000/tasks/${taskId}`);
+        await axios.delete(`https://task-management-server-eight-sigma.vercel.app/tasks/${taskId}`);
         refetch();
         Swal.fire("Deleted!", "Your task has been deleted.", "success");
       }
@@ -115,7 +115,7 @@ const TaskBoard = () => {
       setLocalTasks(newLocalTasks);
 
       try {
-        await axios.put("http://localhost:5000/tasks/reorder", {
+        await axios.put("https://task-management-server-eight-sigma.vercel.app/tasks/reorder", {
           tasks: categoryTasks,
         });
         console.log("Reorder success!");
@@ -137,7 +137,7 @@ const TaskBoard = () => {
       setLocalTasks(movedTasks);
 
       try {
-        await axios.put(`http://localhost:5000/tasks/${taskId}`, {
+        await axios.put(`https://task-management-server-eight-sigma.vercel.app/tasks/${taskId}`, {
           category: destination.droppableId,
           order: destination.index,
         });

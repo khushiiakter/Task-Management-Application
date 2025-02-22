@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../provider/AuthProvider";
 
 const TaskModal = ({ task, onClose, onSave }) => {
+  const { user } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -23,7 +25,8 @@ const TaskModal = ({ task, onClose, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSave(formData);
+    const taskData = { ...formData, userEmail: user?.email };
+    onSave(taskData);
   };
 
   // Function to check if the task is overdue and apply color
