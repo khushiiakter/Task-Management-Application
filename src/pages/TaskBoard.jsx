@@ -16,12 +16,12 @@ const TaskBoard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [localTasks, setLocalTasks] = useState([]);
+  const [activityLog, setActivityLog] = useState([]); // State for activity log
 
   useEffect(() => {
     setLocalTasks(tasks);
   }, [tasks]);
 
-  // Add Task
   const addTaskMutation = useMutation({
     mutationFn: async (newTask) =>
       await axios.post("http://localhost:5000/tasks", newTask),
@@ -33,7 +33,6 @@ const TaskBoard = () => {
     onError: () => Swal.fire("Error!", "Failed to add task.", "error"),
   });
 
-  // Update Task
   const updateTaskMutation = useMutation({
     mutationFn: async (updatedTask) => {
       const { _id, ...taskData } = updatedTask;
@@ -48,7 +47,6 @@ const TaskBoard = () => {
     onError: () => Swal.fire("Error!", "Failed to update task.", "error"),
   });
 
-  // Delete Task
   const deleteTaskMutation = useMutation({
     mutationFn: async (taskId) => {
       const result = await Swal.fire({
@@ -82,44 +80,44 @@ const TaskBoard = () => {
     setIsModalOpen(true);
   };
 
-  
- 
   const onDragEnd = async (result) => {
     if (!result.destination) return;
-  
+
     const { source, destination, draggableId } = result;
     const taskId = draggableId;
-  
+
     const updatedTasks = [...localTasks];
     const draggedTask = updatedTasks.find((task) => task._id === taskId);
-  
+
     if (!draggedTask) return;
-  
+
     if (source.droppableId === destination.droppableId) {
       // Reorder within the same category
       const categoryTasks = updatedTasks
         .filter((task) => task.category === source.droppableId)
         .sort((a, b) => a.order - b.order);
-  
+
       // Remove the dragged task
       const [movedTask] = categoryTasks.splice(source.index, 1);
       categoryTasks.splice(destination.index, 0, movedTask);
-  
+
       // Assign new order values
       categoryTasks.forEach((task, index) => {
         task.order = index;
       });
-  
+
       // Update the localTasks state with the new order
       const newLocalTasks = updatedTasks.map((task) => {
         const updatedTask = categoryTasks.find((t) => t._id === task._id);
         return updatedTask ? updatedTask : task;
       });
-  
+
       setLocalTasks(newLocalTasks);
-  
+
       try {
-        await axios.put("http://localhost:5000/tasks/reorder", { tasks: categoryTasks });
+        await axios.put("http://localhost:5000/tasks/reorder", {
+          tasks: categoryTasks,
+        });
         console.log("Reorder success!");
       } catch (error) {
         console.error("Failed to reorder tasks:", error);
@@ -128,30 +126,41 @@ const TaskBoard = () => {
       // Move to another category
       const movedTasks = updatedTasks.map((task) =>
         task._id === taskId
-          ? { ...task, category: destination.droppableId, order: destination.index }
+          ? {
+              ...task,
+              category: destination.droppableId,
+              order: destination.index,
+            }
           : task
       );
-  
+
       setLocalTasks(movedTasks);
-  
+
       try {
         await axios.put(`http://localhost:5000/tasks/${taskId}`, {
           category: destination.droppableId,
           order: destination.index,
         });
+        setActivityLog([
+          ...activityLog,
+          `Task moved to ${destination.droppableId}`, // Activity log
+        ]);
         console.log("Task category updated successfully!");
       } catch (error) {
         console.error("Failed to update task category:", error);
       }
     }
   };
-  
-  
-  
-  
-  
-  
-  
+
+  // Function to check if the task is overdue and apply color
+  const getDueDateColor = (dueDate) => {
+    if (!dueDate) return "";
+    const now = new Date();
+    const taskDueDate = new Date(dueDate);
+    if (taskDueDate < now) return "text-red-500"; // Overdue
+    return "text-gray-500"; // Default color
+  };
+
   return (
     <div className="md:p-4 container mx-auto">
       <div className="flex justify-center">
@@ -173,7 +182,9 @@ const TaskBoard = () => {
                   {...provided.droppableProps}
                   className="bg-gray-200 p-4 rounded-md shadow-md"
                 >
-                  <h2 className="text-lg font-bold text-black mb-2">{category}</h2>
+                  <h2 className="text-lg font-bold text-black mb-2">
+                    {category}
+                  </h2>
                   {localTasks
                     .filter((task) => task.category === category)
                     .sort((a, b) => a.order - b.order)
@@ -188,13 +199,34 @@ const TaskBoard = () => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className="py-2 px-3 bg-white rounded-md shadow mb-2 flex justify-between items-center"
+                            className={`py-2 px-3 bg-white rounded-md shadow mb-2 flex justify-between items-center ${getDueDateColor(
+                              task.dueDate
+                            )}`}
                           >
                             <div>
-                              <strong className="block text-black">{task.title}</strong>
+                              <strong className="block text-black">
+                                {task.title}
+                              </strong>
                               <p className="text-sm text-gray-700">
                                 {task.description}
                               </p>
+                              {task.dueDate && (
+                                <p
+                                  className={`text-xs ${
+                                    getDueDateColor(task.dueDate)
+                                      ? "text-red-500"
+                                      : "text-gray-500"
+                                  }`}
+                                >
+                                  {getDueDateColor(task.dueDate)
+                                    ? `Overdue: ${new Date(
+                                        task.dueDate
+                                      ).toLocaleDateString()}`
+                                    : `Due: ${new Date(
+                                        task.dueDate
+                                      ).toLocaleDateString()}`}
+                                </p>
+                              )}
                             </div>
                             <div className="flex gap-2">
                               <button
@@ -223,6 +255,17 @@ const TaskBoard = () => {
           ))}
         </div>
       </DragDropContext>
+
+      <div className="mt-8">
+        <h3 className="text-xl font-bold text-black mb-4">Activity Log</h3>
+        <ul className="list-disc pl-5">
+          {activityLog.map((log, index) => (
+            <li key={index} className="text-gray-700">
+              {log}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {isModalOpen && (
         <TaskModal
